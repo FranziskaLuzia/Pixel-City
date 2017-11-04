@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
-import Alamofire
+import Alamofire 
 import AlamofireImage
 
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
@@ -260,9 +260,12 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollect
         return cell
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: 100, height: 100)
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else { return }
+        popVC.initData(forImage: imageArray[indexPath.row])
+        present(popVC, animated: true, completion: nil)
+    }
+    
 }
 
 

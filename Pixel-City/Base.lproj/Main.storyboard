@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -87,6 +87,56 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="132.68365817091455"/>
+        </scene>
+        <!--PopVC-->
+        <scene sceneID="a3h-XG-etG">
+            <objects>
+                <viewController storyboardIdentifier="PopVC" id="ZiN-1W-hqg" customClass="PopVC" customModule="Pixel_City" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3ZV-qY-bnC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FJZ-IL-1Up">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iTL-Xk-Hgu">
+                                <rect key="frame" x="117" y="622" width="140" height="25"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Double-tap to dismiss" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Maj-rd-Vim">
+                                        <rect key="frame" x="-8" y="5" width="157" height="15.5"/>
+                                        <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="11"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Maj-rd-Vim" firstAttribute="centerY" secondItem="iTL-Xk-Hgu" secondAttribute="centerY" id="Gu0-1m-fXz"/>
+                                    <constraint firstItem="Maj-rd-Vim" firstAttribute="centerX" secondItem="iTL-Xk-Hgu" secondAttribute="centerX" id="R6h-5k-aRp"/>
+                                    <constraint firstItem="Maj-rd-Vim" firstAttribute="leading" secondItem="iTL-Xk-Hgu" secondAttribute="leading" constant="-8" id="fpL-FZ-Ttm"/>
+                                    <constraint firstAttribute="width" constant="140" id="uKY-jK-2wf"/>
+                                    <constraint firstAttribute="height" constant="25" id="zcJ-yC-HFI"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tZU-LJ-f0G" firstAttribute="bottom" secondItem="iTL-Xk-Hgu" secondAttribute="bottom" constant="20" id="3bD-Jj-N8O"/>
+                            <constraint firstItem="FJZ-IL-1Up" firstAttribute="bottom" secondItem="tZU-LJ-f0G" secondAttribute="bottom" id="4HG-Vn-s7O"/>
+                            <constraint firstItem="FJZ-IL-1Up" firstAttribute="leading" secondItem="tZU-LJ-f0G" secondAttribute="leading" id="VgN-iP-DKK"/>
+                            <constraint firstItem="FJZ-IL-1Up" firstAttribute="trailing" secondItem="tZU-LJ-f0G" secondAttribute="trailing" id="WSs-nB-MNZ"/>
+                            <constraint firstItem="iTL-Xk-Hgu" firstAttribute="centerX" secondItem="FJZ-IL-1Up" secondAttribute="centerX" id="am5-n3-PSg"/>
+                            <constraint firstItem="FJZ-IL-1Up" firstAttribute="top" secondItem="3ZV-qY-bnC" secondAttribute="top" id="fPg-CJ-jdb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="tZU-LJ-f0G"/>
+                    </view>
+                    <connections>
+                        <outlet property="popImageView" destination="FJZ-IL-1Up" id="Ssp-P9-l4N"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ItB-pB-dfJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="983.20000000000005" y="132.68365817091455"/>
         </scene>
     </scenes>
     <resources>
