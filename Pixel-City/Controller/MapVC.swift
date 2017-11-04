@@ -47,7 +47,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         collectionView?.register(PhotoCell.self, forCellWithReuseIdentifier: "photoCell")
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        collectionView?.backgroundColor = #colorLiteral(red: 0.5725490451, green: 0, blue: 0.2313725501, alpha: 1)
+        collectionView?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         pullUpView.addSubview(collectionView!)
     }
@@ -136,7 +136,6 @@ extension MapVC: MKMapViewDelegate {
     }
     
     func retrieveUrls(forAnnotation annotation: DroppablePin,  handler: @escaping (_ status: Bool) -> ()) {
-        imageUrlArray = []
         
         Alamofire.request(flickrUrl(forAPIKey: apiKey, withAnnotation: annotation, andNumberOfPhotos: 40)).responseJSON { (response) in
             guard let json = response.result.value as? Dictionary<String, AnyObject>  else { return }
@@ -153,7 +152,6 @@ extension MapVC: MKMapViewDelegate {
     }
     
     func retrieveImages(handler: @escaping (_ status: Bool) -> ()) {
-        imageArray = []
         for URL in imageUrlArray {
             Alamofire.request(URL).responseImage(completionHandler: { (response) in
                 guard let image = response.result.value else { return }
@@ -180,6 +178,11 @@ extension MapVC: MKMapViewDelegate {
         removeProgressLbl()
         cancelAllSessions()
         
+        imageUrlArray = []
+        imageArray = []
+        
+        collectionView?.reloadData()
+        
         animateViewUp()
         addSwipe()
         addSpinner()
@@ -200,13 +203,14 @@ extension MapVC: MKMapViewDelegate {
                     if finished {
                         self.removeSpinner( )
                         self.removeProgressLbl()
-                        // reload collectionView
+                        self.collectionView?.reloadData() 
                     }
                 })
             }
         }
     }
 }
+
 
 
 extension MapVC: CLLocationManagerDelegate {
@@ -235,21 +239,30 @@ extension MapVC: CLLocationManagerDelegate {
     }
 }
 
-extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
+
+
+extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return imageArray.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // number of items in array
-        return 4
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell
-        return cell! 
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell else { return UICollectionViewCell() }
+        let imageFromIndex = imageArray[indexPath.row]
+        let imageView = UIImageView(image: imageFromIndex)
+        cell.addSubview(imageView)
+        imageView.clipsToBounds = true
+        return cell
     }
+    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: 100, height: 100)
+//    }
 }
 
 
