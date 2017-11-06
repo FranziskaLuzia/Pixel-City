@@ -31,10 +31,8 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     
     var flowLayout = UICollectionViewFlowLayout()
     var collectionView: UICollectionView?
-    
-    var imageUrlArray = [String]()
-    var imageArray = [UIImage]()
-    
+
+    var imageDataArray = [ImageData]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,24 +141,38 @@ extension MapVC: MKMapViewDelegate {
             guard let json = response.result.value as? Dictionary<String, AnyObject>  else { return }
             
             let photosDict = json["photos"] as! Dictionary<String, AnyObject>
-            
             let photosDictArray = photosDict["photo"] as! [Dictionary<String, AnyObject>]
             for photo in photosDictArray {
                 let postUrl = "https://farm\(photo["farm"]!).staticflickr.com/\(photo["server"]!)/\(photo["id"]!)_\(photo["secret"]!)_h_d.jpg"
-                self.imageUrlArray.append(postUrl)
+                
+                let title = photo["title"] as? String
+                
+                let imageData = ImageData(imageUrl: postUrl, title: title)
+                self.imageDataArray.append(imageData)
             }
+
             handler(true)
         }
     }
     
+    
+    
+    
+    
     func retrieveImages(handler: @escaping (_ status: Bool) -> ()) {
-        for URL in imageUrlArray {
-            Alamofire.request(URL).responseImage(completionHandler: { (response) in
+        var imageCounter = 0
+        let maxNumberOfImages = imageDataArray.count
+
+        for data in imageDataArray {
+            Alamofire.request(data.imageUrl).responseImage(completionHandler: { (response) in
                 guard let image = response.result.value else { return }
-                self.imageArray.append(image)
-                self.progressLbl?.text = "\(self.imageArray.count)/40 IMAGES DOWNLOADED"
                 
-                if self.imageArray.count == self.imageUrlArray.count {
+                imageCounter += 1
+                
+                data.image = image
+                self.progressLbl?.text = "\(imageCounter)/\(maxNumberOfImages) IMAGES DOWNLOADED"
+
+                if imageCounter == maxNumberOfImages {
                     handler(true)
                 }
             })
@@ -180,8 +192,7 @@ extension MapVC: MKMapViewDelegate {
         removeProgressLbl()
         cancelAllSessions()
         
-        imageUrlArray = []
-        imageArray = []
+        imageDataArray = []
         
         collectionView?.reloadData()
         
@@ -246,7 +257,7 @@ extension MapVC: CLLocationManagerDelegate {
 extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageArray.count
+        return imageDataArray.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -255,8 +266,8 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell else { return UICollectionViewCell() }
-        let imageFromIndex = imageArray[indexPath.row]
-        let imageView = UIImageView(image: imageFromIndex)
+        let imageDataFromIndex = imageDataArray[indexPath.row]
+        let imageView = UIImageView(image: imageDataFromIndex.image)
         cell.addSubview(imageView)
         imageView.clipsToBounds = true
         return cell
@@ -264,7 +275,11 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else { return }
-        popVC.initData(forImage: imageArray[indexPath.row])
+        let imageData = imageDataArray[indexPath.row]
+        
+        guard let image = imageData.image else{ return }
+        
+        popVC.initData(for: image, with: imageData.title)
         present(popVC, animated: true, completion: nil)
     }
     
@@ -276,8 +291,9 @@ extension MapVC: UIViewControllerPreviewingDelegate {
         guard let indexPath = collectionView?.indexPathForItem(at: location), let cell = collectionView?.cellForItem(at: indexPath) else { return nil }
         
         guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else { return nil }
-        
-        popVC.initData(forImage: imageArray[indexPath.row])
+        let imageData = imageDataArray[indexPath.row]
+        guard let image = imageData.image else{ return nil }
+        popVC.initData(for: image, with: imageData.title)
         
         previewingContext.sourceRect = cell.contentView.frame
         return popVC
@@ -288,8 +304,16 @@ extension MapVC: UIViewControllerPreviewingDelegate {
     }
 }
 
-
-
+final class ImageData {
+    let imageUrl: String
+    var image: UIImage?
+    var title: String?
+    
+    init(imageUrl: String, title: String?) {
+        self.imageUrl = imageUrl
+        self.title = title
+    }
+}
 
 
 
